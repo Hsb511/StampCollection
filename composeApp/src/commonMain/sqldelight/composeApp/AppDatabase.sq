@@ -1,0 +1,58 @@
+CREATE TABLE IF NOT EXISTS StampDbModel(
+    id INTEGER NOT NULL PRIMARY KEY,
+    tellier TEXT NOT NULL,
+    image BLOB NOT NULL,
+    title TEXT NOT NULL,
+    year INTEGER NOT NULL,
+    quotation TEXT,
+    positionId INTEGER NOT NULL,
+    link TEXT NOT NULL,
+    selected INTEGER NOT NULL,
+    FOREIGN KEY(positionId) REFERENCES PositionDbModel(id)
+);
+
+CREATE TABLE IF NOT EXISTS PositionDbModel(
+    id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+    page INTEGER NOT NULL,
+    row INTEGER NOT NULL,
+    column INTEGER NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS DetailsDbModel(
+    id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+    stampId INTEGER NOT NULL,
+    philatelix TEXT NOT NULL,
+    michel TEXT NOT NULL,
+    tellier TEXT NOT NULL,
+    widthMM TEXT NOT NULL,
+    heightMM TEXT NOT NULL,
+    printingMethod TEXT NOT NULL,
+    drawer TEXT NOT NULL,
+    imageUrl TEXT NOT NULL,
+    imageContentDescription TEXT NOT NULL,
+    FOREIGN KEY(stampId) REFERENCES StampDbModel(id)
+);
+
+selectAllStamps:
+SELECT StampDbModel.* FROM StampDbModel;
+
+insertStamps:
+INSERT INTO StampDbModel(id, tellier, image, title, year, quotation, positionId, link, selected)
+VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?);
+
+selectPositionById:
+SELECT PositionDbModel.* FROM PositionDbModel WHERE id = :id;
+
+selectLastPositionId:
+SELECT id FROM PositionDbModel ORDER BY id DESC LIMIT 1;
+
+insertPosition:
+INSERT INTO PositionDbModel(page, row, column)
+VALUES(?, ?, ?);
+
+selectDetailsById:
+SELECT DetailsDbModel.* FROM DetailsDbModel WHERE id = :id;
+
+insertDetails:
+INSERT INTO DetailsDbModel(stampId, philatelix, michel, tellier, widthMM, heightMM, printingMethod, drawer, imageUrl, imageContentDescription)
+VALUES(?,?, ?, ?,?, ?, ?,?, ?, ?);
